@@ -1,7 +1,7 @@
 const Course = require('../model/course').Course;
  
  /** 
- *  @description get all course  
+ *  @description get all course count  
  */
   exports.getCourseDataCount = () => {
     return new Promise((resolve, reject) => {
