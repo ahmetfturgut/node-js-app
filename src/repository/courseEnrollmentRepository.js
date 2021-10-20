@@ -1,99 +1,37 @@
-const { User } = require('../model/user');
+const CourseEnrollment = require('../model/courseEnrollment').CourseEnrollment;
+ 
 
-/**
- * @description Gets the all users
- *
- * @returns {Promise<[{users}]>}
- * user object array
+/** 
+ *  @description Bulk Operation: Write bulkArray in DB 
+ * @param bulkArray {array} 
  */
-exports.getAllUsers = async () => {
-	try {
-		return User.find();
-	} catch (error) {
-		throw error;
-	}
-};
+ exports.curseEnrollmentBulkOperation = (bulkArray) => {
+    return new Promise((resolve, reject) => {
+        CourseEnrollment.bulkWrite(bulkArray)
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
 
-/**
- * @description Gets the all users
- * @param id {property} User Id
- * @returns {Promise<[{users}]>}
- * user object array
- */
-exports.getUser = async id => {
-	try {
-		return User.findOne({ _id: id });
-	} catch (error) {
-		throw error;
-	}
-};
+}
 
-/**
- * @description Create User
- * @param user {object} Object containing all required fields to
- * create user
+ /** 
+ *  @description remove all document  
  */
-exports.createUser = async user => {
-	try {
-		const userModel = new User(user);
-		return userModel.save();
-	} catch (error) {
-		throw error;
-	}
-};
+  exports.removeAllCourseEnrollment = () => {
+    return new Promise((resolve, reject) => {
+        CourseEnrollment.remove( )
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
 
-/**
- * @description Update User
- * @param user {object} Object containing all required fields to
- * update user
- */
-exports.updateUser = async user => {
-	try {
-		await User.updateOne(user);
-	} catch (error) {
-		throw error;
-	}
-};
+}
 
-/**
- * @description Gets the user by email and password
- * @param email {property} Email
- * @param password {property} Password
- * @returns {Promise<[{user}]>}
- * user object
- */
-exports.getUserByLoginInfo = async (email, password) => {
-	try {
-		return User.findOne({ email, password });
-	} catch (error) {
-		throw error;
-	}
-};
 
-/**
- * @description Gets the user by email
- * @param email {property} Email
- * @returns {Promise<[{user}]>}
- * user object
- */
-exports.getUserByEmail = async email => {
-	try {
-		return User.findOne({ email });
-	} catch (error) {
-		throw error;
-	}
-};
-
-/**
- * @description Gets the user by verificationCode
- * @param verificationCode {property} verificationCode
- * @returns {Promise<[{user}]>}
- * user object
- */
-exports.getUserByVerificationCode = async verificationCode => {
-	try {
-		return User.findOne({ verificationCode });
-	} catch (error) {
-		throw error;
-	}
-};

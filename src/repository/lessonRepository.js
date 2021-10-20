@@ -1,11 +1,14 @@
 var Lesson = require('../model/lesson').Lesson;
 
- /** 
- *  @description get all lesson  
+ 
+
+/** 
+ *  @description Bulk Operation: Write bulkArray in DB 
+ * @param bulkArray {array} 
  */
-exports.getLessonDataCount = () => {
+exports.lessonBulkOperation = (bulkArray) => {
     return new Promise((resolve, reject) => {
-        Lesson.count()
+        Lesson.bulkWrite(bulkArray)
             .then(result => {
                 resolve(result);
             })
@@ -16,13 +19,12 @@ exports.getLessonDataCount = () => {
 
 }
 
-/** 
- *  @description Bulk Operation: Write bulkArray in DB 
- * @param bulkArray {array} 
+ /** 
+ *  @description remove all document  
  */
-exports.lessonBulkOperation = (bulkArray) => {
+  exports.removeAllLesson = () => {
     return new Promise((resolve, reject) => {
-        Lesson.bulkWrite(bulkArray)
+        Lesson.remove( )
             .then(result => {
                 resolve(result);
             })

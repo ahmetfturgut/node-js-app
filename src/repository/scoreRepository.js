@@ -31,3 +31,19 @@ const Score = require('../model/score').Score;
     })
 
 }
+
+ /** 
+ *  @description remove all document  
+ */
+  exports.removeAllScore = () => {
+    return new Promise((resolve, reject) => {
+        Score.remove( )
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
+
+}
