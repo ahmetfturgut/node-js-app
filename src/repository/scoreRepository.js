@@ -32,6 +32,23 @@ const Score = require('../model/score').Score;
 
 }
 
+/** 
+ *  @description Bulk Operation: Write bulkArray in DB 
+ * @param bulkArray {array} 
+ */
+ exports.updatee = (bulkArray) => {
+    return new Promise((resolve, reject) => {
+        Score.updateMany(bulkArray)
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
+
+}
+
  /** 
  *  @description remove all document  
  */

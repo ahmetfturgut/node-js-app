@@ -1,4 +1,4 @@
-const { courseRepository, userRepository, courseEnrollmentRepository, lessonRepository } = require('../repository/repository.index');
+const { courseRepository, userRepository, courseEnrollmentRepository, lessonRepository, scoreRepository } = require('../repository/repository.index');
 
 
 
@@ -37,19 +37,48 @@ exports.setCurseEnrollmentData = async () => {
 exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 	try {
 
-
-		let courseEnrollment = await courseEnrollmentRepository.getAllcourseEnrollmentsId();
+		let lessonPoint = 1;
+		let courseEnrollment = await courseEnrollmentRepository.getAllcourseEnrollments();
 		let bulkcourseEnrollmentArray = [];
+		let bulkScoreArray = [];
 		for (let i = 0; i < courseEnrollment.length; i++) {
 
 			let random = getRandomInt(20);
 			let lessons = await lessonRepository.getRandomLessonsId(random);
-			let completedLessons=[];
-			for (let j = 0; j < lessons.length; j++) {
+			let completedLessons = [];
+			let scoreHistoryData = [];
+			let totalPoints = 0;
 
-				completedLessons.push({"lessonId": lessons[j]._id.toString()})
+			for (let j = 0; j < lessons.length; j++) {
+				totalPoints = totalPoints + lessonPoint
+				completedLessons.push({ "lessonId": lessons[j]._id.toString() })
+				scoreHistoryData.push({
+					"point": lessonPoint,
+					"courseId": courseEnrollment[i].courseId,
+					"lessonId": lessons[j]._id.toString(),
+				})
 
 			}
+
+
+
+			bulkScoreArray.push({
+				updateMany:
+				{
+					"filter": { "userId": courseEnrollment[i].userId },
+					"update": {
+						$inc: { 'totalPoints': totalPoints },
+						$push:
+						{
+							"history": scoreHistoryData,
+
+						}
+
+					}
+				}
+			});
+
+
 			bulkcourseEnrollmentArray.push({
 				updateMany:
 				{
@@ -57,6 +86,7 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 					"update": {
 						$set:
 						{
+							"lastCompletedLesson": lessons.slice(-1)[0]._id.toString(),
 							"completedLessons": completedLessons
 
 						}
@@ -64,12 +94,13 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 					}
 				}
 			});
-			
+
 
 		}
 		let courseEnrollmentResult = await courseEnrollmentRepository.curseEnrollmentBulkOperation(bulkcourseEnrollmentArray);
+		let scoreResult = await scoreRepository.scoreBulkOperation(bulkScoreArray);
 
-		return { courseEnrollmentResult };
+		return { courseEnrollmentResult, scoreResult };
 	} catch (error) {
 		throw { success: false, error: any };
 	}

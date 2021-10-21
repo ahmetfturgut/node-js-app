@@ -1,11 +1,11 @@
-const { userRepository,scoreRepository } = require('../repository/repository.index');
+const { userRepository, scoreRepository } = require('../repository/repository.index');
 const users = require('../../assets/jsons/users.json');
- 
- exports.userBulkOperation = async () => {
+
+exports.userBulkOperation = async () => {
 	try {
 		let bulkUserArray = [];
 		let bulkScoreForUserArray = [];
-		for (let i = 0; i < users.length; i++) { 
+		for (let i = 0; i < users.length; i++) {
 
 			const ObjectId = require('mongodb').ObjectId;
 
@@ -24,7 +24,7 @@ const users = require('../../assets/jsons/users.json');
 				insertOne: {
 					document: {
 						"userId": bulkUserArray[i].insertOne.document._id.toString(),
-						"totalPoints": 0, 
+						"totalPoints": 0,
 					},
 				}
 			});
@@ -32,11 +32,10 @@ const users = require('../../assets/jsons/users.json');
 		}
 		let userResult = await userRepository.userBulkOperation(bulkUserArray);
 		let scoreResult = await scoreRepository.scoreBulkOperation(bulkScoreForUserArray);
-		
+
 
 		return { userResult, scoreResult };
 	} catch (error) {
 		throw { success: false, error: any };
 	}
 };
- 

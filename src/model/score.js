@@ -17,7 +17,8 @@ var ScoreSchema = new Schema({
             type: Number
         },
         date: {
-            type: Date
+            type: Date,
+            default: Date.now
         },
         courseId: {
             type: String
@@ -37,6 +38,8 @@ var ScoreSchema = new Schema({
         default: Date.now
     }
 });
+
+
 
 const Score = mongoose.model('score', ScoreSchema);
 

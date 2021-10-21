@@ -10,6 +10,8 @@ exports.initializeData = async () => {
     await addComplatedLessonToCourseEnrollmentsData();
     console.log("Finish Data Set")
 }
+
+
 const addLessonsAndCourseData = async () => {
     try {
         let resultLessons = await lessonService.lessonBulkOperation();
@@ -33,7 +35,7 @@ const addUsersAndScoreData = async () => {
             console.log(`Added user (${resultUsers.userResult.insertedCount}) `);
         }
         if (resultUsers.scoreResult) {
-            console.log(`Added course (${resultUsers.scoreResult.insertedCount}) `);
+            console.log(`Added score (${resultUsers.scoreResult.insertedCount}) `);
         } 
 
     } catch (error) {
