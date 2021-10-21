@@ -18,9 +18,11 @@ exports.getCourseDataCount = () => {
 /** 
 *  @description get random  Course
 */
-exports.getCourserRandomData = (random) => {
+exports.getRandomCourseId = (random) => {
     return new Promise((resolve, reject) => {
-        Course.find()
+        Course.find({}, {
+            "_id": 1
+        })
             .limit(random)
             .then(result => {
                 resolve(result);
@@ -50,12 +52,12 @@ exports.courseBulkOperation = (bulkArray) => {
 }
 
 
- /** 
- *  @description remove all document  
- */
-  exports.removeAllCourse = () => {
+/** 
+*  @description remove all document  
+*/
+exports.removeAllCourse = () => {
     return new Promise((resolve, reject) => {
-        Course.remove( )
+        Course.remove()
             .then(result => {
                 resolve(result);
             })

@@ -7,6 +7,7 @@ exports.initializeData = async () => {
     await addLessonsAndCourseData();
     await addUsersAndScoreData();
     await addCourseEnrollmentData();
+    await addComplatedLessonToCourseEnrollmentsData();
     console.log("Finish Data Set")
 }
 const addLessonsAndCourseData = async () => {
@@ -53,6 +54,20 @@ const addCourseEnrollmentData = async () => {
         throw error;
     }
 }
+
+const addComplatedLessonToCourseEnrollmentsData = async () => {
+    try {
+
+        let result = await courseEnrollmentService.addComplatedLessonToCourseEnrollmentsData();
+        if (result.courseEnrollmentResult) {
+            console.log(`Updated courseEnrollment (${result.courseEnrollmentResult.nModified}) `);
+        }
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
 
 
 

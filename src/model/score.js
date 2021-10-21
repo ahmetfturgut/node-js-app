@@ -3,7 +3,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-var ScoreSchema = new Schema({ 
+var ScoreSchema = new Schema({
     userId: {
         type: String,
     },

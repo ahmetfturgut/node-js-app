@@ -33,5 +33,24 @@ const CourseEnrollment = require('../model/courseEnrollment').CourseEnrollment;
     })
 
 }
+ /** 
+ *  @description get all CourseEnrollment Id  
+ */
+  exports.getAllcourseEnrollmentsId = () => {
+    return new Promise((resolve, reject) => {
+        CourseEnrollment.find({},{
+            "_id":1
+        })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
+
+}
+
+
 
 

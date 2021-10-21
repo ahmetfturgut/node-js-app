@@ -1,5 +1,5 @@
 
- 
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -20,22 +20,23 @@ var CourseEnrollmentSchema = new Schema({
 
     lastCompletedLesson: {
         type: String,
-    }, 
+    },
 
-    completedLessons:[{
-		lessonId: {
-			type: String, 
-		},
-		date: {
+    completedLessons: [{
+        lessonId: {
+            type: String,
+        },
+        date: {
             type: Date,
-		}
+            default: Date.now
+        }
     }],
-  
+
     createdAt: {
         type: Date,
         default: Date.now
     },
-    
+
     updatedAt: {
         type: Date,
         default: Date.now
