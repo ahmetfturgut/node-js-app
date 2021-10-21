@@ -1,6 +1,6 @@
 
 const { userRepository, courseEnrollmentRepository, courseRepository, scoreRepository, lessonRepository } = require('../repository/repository.index');
-const { courseEnrollmentService, lessonService, userService } = require('../service/service.index');
+const { courseEnrollmentService, lessonService, userService, scoreService } = require('../service/service.index');
 
 exports.initializeData = async () => {
     await removeData();
@@ -8,6 +8,7 @@ exports.initializeData = async () => {
     await addUsersAndScoreData();
     await addCourseEnrollmentData();
     await addComplatedLessonToCourseEnrollmentsData();
+    await calculateTotalPoints();
     console.log("Finish Data Set")
 }
 
@@ -36,7 +37,7 @@ const addUsersAndScoreData = async () => {
         }
         if (resultUsers.scoreResult) {
             console.log(`Added score (${resultUsers.scoreResult.insertedCount}) `);
-        } 
+        }
 
     } catch (error) {
         console.log("error:" + error);
@@ -70,11 +71,20 @@ const addComplatedLessonToCourseEnrollmentsData = async () => {
     }
 }
 
+const calculateTotalPoints = async () => {
+    try {
 
+        let result = await scoreService.calculateTotalPoints();
+        console.log("Point of data whose score was validated=" + result.checkedDataCount + "\nError Data Count=" + result.errorDataCount)
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
 
 
 const removeData = async () => {
-    try { 
+    try {
 
         await userRepository.removeAllUser();
         await courseEnrollmentRepository.removeAllCourseEnrollment();

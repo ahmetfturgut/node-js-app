@@ -64,3 +64,21 @@ const Score = require('../model/score').Score;
     })
 
 }
+/** 
+ * @description getUserScoreByUserId 
+ * @param userId 
+ */
+ exports.getUserScoreByUserId = (userId) => {
+    return new Promise((resolve, reject) => {
+        Score.findOne({"userId": userId},{
+            "totalPoints":1
+        })
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
+
+}

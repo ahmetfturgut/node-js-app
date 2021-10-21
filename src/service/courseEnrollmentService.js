@@ -1,4 +1,5 @@
 const { courseRepository, userRepository, courseEnrollmentRepository, lessonRepository, scoreRepository } = require('../repository/repository.index');
+const enums = require('../utils/enums/enums');
 
 
 
@@ -8,6 +9,7 @@ exports.setCurseEnrollmentData = async () => {
 
 		let users = await userRepository.getAllUsersId();
 		let bulkcourseEnrollmentArray = [];
+		let bulkScoreArray = []; 
 		for (let i = 0; i < users.length; i++) {
 
 			let random = getRandomInt(10);
@@ -23,12 +25,25 @@ exports.setCurseEnrollmentData = async () => {
 						},
 					}
 				});
+				
 			}
+
+			bulkScoreArray.push({
+				updateMany:
+				{
+					"filter": { "userId": users[i]._id },
+					"update": {
+						$set: { 'totalPoints': course.length * enums.points.joinCoursePoint }, 
+
+					}
+				}
+			});
 
 		}
 		let courseEnrollmentResult = await courseEnrollmentRepository.curseEnrollmentBulkOperation(bulkcourseEnrollmentArray);
+		let scoreResult = await scoreRepository.scoreBulkOperation(bulkScoreArray);
 
-		return { courseEnrollmentResult };
+		return { courseEnrollmentResult,scoreResult };
 	} catch (error) {
 		throw { success: false, error: any };
 	}
@@ -36,8 +51,7 @@ exports.setCurseEnrollmentData = async () => {
 
 exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 	try {
-
-		let lessonPoint = 1;
+ 
 		let courseEnrollment = await courseEnrollmentRepository.getAllcourseEnrollments();
 		let bulkcourseEnrollmentArray = [];
 		let bulkScoreArray = [];
@@ -50,18 +64,16 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 			let totalPoints = 0;
 
 			for (let j = 0; j < lessons.length; j++) {
-				totalPoints = totalPoints + lessonPoint
+				totalPoints = totalPoints + enums.points.complatedlessonPoint
 				completedLessons.push({ "lessonId": lessons[j]._id.toString() })
 				scoreHistoryData.push({
-					"point": lessonPoint,
+					"point": enums.points.complatedlessonPoint,
 					"courseId": courseEnrollment[i].courseId,
 					"lessonId": lessons[j]._id.toString(),
 				})
 
-			}
-
-
-
+			} 
+			
 			bulkScoreArray.push({
 				updateMany:
 				{
