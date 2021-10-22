@@ -1,6 +1,6 @@
 
 const { userRepository, courseEnrollmentRepository, courseRepository, scoreRepository, lessonRepository } = require('../repository/repository.index');
-const { courseEnrollmentService, lessonService, userService, scoreService } = require('../service/service.index');
+const { courseEnrollmentService, lessonService, userService, scoreService, courseService } = require('../service/service.index');
 
 exports.initializeData = async () => {
     await removeData();
@@ -13,76 +13,9 @@ exports.initializeData = async () => {
 }
 
 
-const addLessonsAndCourseData = async () => {
-    try {
-        let resultLessons = await lessonService.lessonBulkOperation();
-        if (resultLessons.courseResult) {
-            console.log(`Added course (${resultLessons.courseResult.insertedCount}) `);
-        }
-        if (resultLessons.lessonResult) {
-            console.log(`Added lesson (${resultLessons.lessonResult.insertedCount}) `);
-        }
-
-    } catch (error) {
-        console.log("error:" + error);
-        throw error;
-    }
-}
-
-const addUsersAndScoreData = async () => {
-    try {
-        let resultUsers = await userService.userBulkOperation();
-        if (resultUsers.userResult) {
-            console.log(`Added user (${resultUsers.userResult.insertedCount}) `);
-        }
-        if (resultUsers.scoreResult) {
-            console.log(`Added score (${resultUsers.scoreResult.insertedCount}) `);
-        }
-
-    } catch (error) {
-        console.log("error:" + error);
-        throw error;
-    }
-}
-
-const addCourseEnrollmentData = async () => {
-    try {
-
-        let resultscourseEnrollment = await courseEnrollmentService.setCurseEnrollmentData();
-        if (resultscourseEnrollment.courseEnrollmentResult) {
-            console.log(`Added courseEnrollment (${resultscourseEnrollment.courseEnrollmentResult.insertedCount}) `);
-        }
-    } catch (error) {
-        console.log("error:" + error);
-        throw error;
-    }
-}
-
-const addComplatedLessonToCourseEnrollmentsData = async () => {
-    try {
-
-        let result = await courseEnrollmentService.addComplatedLessonToCourseEnrollmentsData();
-        if (result.courseEnrollmentResult) {
-            console.log(`Updated courseEnrollment (${result.courseEnrollmentResult.nModified}) `);
-        }
-    } catch (error) {
-        console.log("error:" + error);
-        throw error;
-    }
-}
-
-const calculateTotalPoints = async () => {
-    try {
-
-        let result = await scoreService.calculateTotalPoints();
-        console.log("Point of data whose score was validated=" + result.checkedDataCount + "\nError Data Count=" + result.errorDataCount)
-    } catch (error) {
-        console.log("error:" + error);
-        throw error;
-    }
-}
-
-
+/**
+*  @description Clear Database 
+*/
 const removeData = async () => {
     try {
 
@@ -97,6 +30,113 @@ const removeData = async () => {
         throw error;
     }
 }
+
+
+
+/**
+*  @description TASK 1
+*  Start a local db and create and insert mock data for 30 courses with 20 unique lessons.
+*/
+const addLessonsAndCourseData = async () => {
+    try {
+        
+        let resultLessons = await lessonService.lessonBulkOperation();
+        let resultCourse = await courseService.courseBulkOperation();
+        if (resultLessons) {
+            console.log(`Added lesson (${resultLessons.insertedCount}) `);
+        }
+        if (resultCourse) {
+            console.log(`Added course (${resultCourse.insertedCount}) `);
+        }
+
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
+
+
+/**
+*  @description TASK 2
+*  Create 1000 mock users with unique emails and add a score object for each user.
+*/
+const addUsersAndScoreData = async () => {
+    try {
+        let resultUsers = await userService.userAndScoreBulkOperation();
+        if (resultUsers.userResult) {
+            console.log(`Added user (${resultUsers.userResult.insertedCount}) `);
+        }
+        if (resultUsers.scoreResult) {
+            console.log(`Added score (${resultUsers.scoreResult.insertedCount}) `);
+        }
+
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
+
+
+/**
+*  @description TASK 3
+*  Add course enrollments to each user by the count of a random number between 1 to 10. 
+*/
+
+const addCourseEnrollmentData = async () => {
+    try {
+
+        let resultscourseEnrollment = await courseEnrollmentService.setCurseEnrollmentData();
+        if (resultscourseEnrollment.courseEnrollmentResult) {
+            console.log(`Added courseEnrollment (${resultscourseEnrollment.courseEnrollmentResult.insertedCount}) `);
+        }
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
+
+
+
+
+/**
+*  @description TASK 4
+*  Add completed lessons to course enrollments by the count of a random number between 1 to 20 
+*/
+
+const addComplatedLessonToCourseEnrollmentsData = async () => {
+    try {
+
+        let result = await courseEnrollmentService.addComplatedLessonToCourseEnrollmentsData();
+        if (result.courseEnrollmentResult) {
+            console.log(`Updated courseEnrollment (${result.courseEnrollmentResult.nModified}) `);
+        }
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
+
+
+/**
+*  @description TASK 4
+*  Calculate the total points of each user. 
+*/
+const calculateTotalPoints = async () => {
+    try {
+
+        let result = await scoreService.calculateTotalPoints();
+       
+    } catch (error) {
+        console.log("error:" + error);
+        throw error;
+    }
+}
+
+
 
 
 

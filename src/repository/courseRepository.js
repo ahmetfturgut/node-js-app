@@ -57,7 +57,25 @@ exports.courseBulkOperation = (bulkArray) => {
 */
 exports.removeAllCourse = () => {
     return new Promise((resolve, reject) => {
-        Course.remove()
+        Course.deleteMany()
+            .then(result => {
+                resolve(result);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    })
+
+}
+
+/** 
+*  @description remove all document  
+*/
+exports.getCourseById = (id) => {
+    return new Promise((resolve, reject) => {
+        Course.findOne({
+            "_id": id
+        })
             .then(result => {
                 resolve(result);
             })

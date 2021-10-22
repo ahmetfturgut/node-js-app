@@ -10,7 +10,7 @@
 		"node": ">=12.0.0"
 	},
 	"scripts": {
-		"start": "src/server.js",
+		"start": "nodemon src/loaders/server.js",
 		"prettier-format": "prettier --config .prettierrc src/**/*.js --write",
 		"lint": "eslint ./src/ --ignore-path .gitignore --ignore-pattern internals/scripts",
 		"test": "nyc --reporter=html --reporter=text mocha test/**/*.test.js --timeout 10000npm --exit",
@@ -29,7 +29,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"moment": "^2.24.0",
 		"mongo-sanitize": "^1.0.1",
-		"mongoose": "^5.0.7", 
+		"mongoose": "^5.0.7",
 		"node-cache": "^4.2.0",
 		"node-cache-promise": "^1.0.0",
 		"node-pre-gyp": "^0.13.0",
@@ -51,6 +51,7 @@
 		"husky": "^4.3.5",
 		"mocha": "^7.1.1",
 		"mocha-lcov-reporter": "^1.3.0",
+		"nodemon": "^2.0.14",
 		"nyc": "^15.1.0",
 		"prettier": "^1.18.2",
 		"request": "^2.88.2",

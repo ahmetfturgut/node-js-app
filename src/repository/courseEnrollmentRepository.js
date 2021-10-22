@@ -23,7 +23,7 @@ exports.curseEnrollmentBulkOperation = (bulkArray) => {
 */
 exports.removeAllCourseEnrollment = () => {
     return new Promise((resolve, reject) => {
-        CourseEnrollment.remove()
+        CourseEnrollment.deleteMany()
             .then(result => {
                 resolve(result);
             })
@@ -59,7 +59,8 @@ exports.getAllcourseEnrollments = () => {
 exports.getCourseEnrollmentsByUserId = (userId) => {
     return new Promise((resolve, reject) => {
         CourseEnrollment.find({ "userId": userId }, {
-            "completedLessons": 1
+            "completedLessons": 1,
+            "courseId":1
         })
             .then(result => {
                 resolve(result);

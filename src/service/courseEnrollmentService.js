@@ -1,5 +1,5 @@
 const { courseRepository, userRepository, courseEnrollmentRepository, lessonRepository, scoreRepository } = require('../repository/repository.index');
-const enums = require('../utils/enums/enums');
+const {CONSTS} = require('../constants/consts');
 
 
 
@@ -33,7 +33,7 @@ exports.setCurseEnrollmentData = async () => {
 				{
 					"filter": { "userId": users[i]._id },
 					"update": {
-						$set: { 'totalPoints': course.length * enums.points.joinCoursePoint }, 
+						$set: { 'totalPoints': course.length * CONSTS.joinCoursePoint }, 
 
 					}
 				}
@@ -45,7 +45,7 @@ exports.setCurseEnrollmentData = async () => {
 
 		return { courseEnrollmentResult,scoreResult };
 	} catch (error) {
-		throw { success: false, error: any };
+		throw { success: false, error: error };
 	}
 };
 
@@ -55,21 +55,28 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 		let courseEnrollment = await courseEnrollmentRepository.getAllcourseEnrollments();
 		let bulkcourseEnrollmentArray = [];
 		let bulkScoreArray = [];
-		for (let i = 0; i < courseEnrollment.length; i++) {
 
-			let random = getRandomInt(20);
-			let lessons = await lessonRepository.getRandomLessonsId(random);
+		for (let i = 0; i < courseEnrollment.length; i++) {
+			 
+			let course = await courseRepository.getCourseById(courseEnrollment[i].courseId);
 			let completedLessons = [];
 			let scoreHistoryData = [];
 			let totalPoints = 0;
 
-			for (let j = 0; j < lessons.length; j++) {
-				totalPoints = totalPoints + enums.points.complatedlessonPoint
-				completedLessons.push({ "lessonId": lessons[j]._id.toString() })
+			const contentCount = Math.floor(Math.random() * course.content.length) + 1;
+
+			for (let j = 0; j < contentCount; j++) {
+
+				completedLessons.push({
+					"lessonId":course.content[j].lessonId, 
+				})
+				
+				totalPoints = totalPoints + CONSTS.complatedlessonPoint;
+				 
 				scoreHistoryData.push({
-					"point": enums.points.complatedlessonPoint,
-					"courseId": courseEnrollment[i].courseId,
-					"lessonId": lessons[j]._id.toString(),
+					"point": CONSTS.complatedlessonPoint,
+					"courseId": course._id.toString(),
+					"lessonId": course.content[j].lessonId,
 				})
 
 			} 
@@ -98,7 +105,8 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 					"update": {
 						$set:
 						{
-							"lastCompletedLesson": lessons.slice(-1)[0]._id.toString(),
+						 
+							"lastCompletedLesson": completedLessons.slice(-1)[0].lessonId,
 							"completedLessons": completedLessons
 
 						}
@@ -114,7 +122,7 @@ exports.addComplatedLessonToCourseEnrollmentsData = async () => {
 
 		return { courseEnrollmentResult, scoreResult };
 	} catch (error) {
-		throw { success: false, error: any };
+		throw { success: false, error: error };
 	}
 };
 

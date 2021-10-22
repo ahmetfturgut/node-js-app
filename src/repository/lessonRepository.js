@@ -24,7 +24,7 @@ exports.lessonBulkOperation = (bulkArray) => {
 */
 exports.removeAllLesson = () => {
     return new Promise((resolve, reject) => {
-        Lesson.remove()
+        Lesson.deleteMany()
             .then(result => {
                 resolve(result);
             })
@@ -36,16 +36,18 @@ exports.removeAllLesson = () => {
 }
 
 
+
 /** 
-*  @description get random Lesson
+*  @description get limit Lesson
 */
-exports.getRandomLessonsId = (random) => {
+exports.getRandomLessons = (randumNumber) => {
     return new Promise((resolve, reject) => {
-        Lesson.find({}, {
-            "_id": 1
-        })
-            .limit(random)
+        Lesson.aggregate([  {
+                $sample: { size: randumNumber }
+            }
+        ])
             .then(result => {
+
                 resolve(result);
             })
             .catch(err => {

@@ -1,18 +1,49 @@
-const { userRepository } = require('../repository/repository.index');
- 
-/**
- * @description Gets the all users
- *
- * @returns {Promise<{success: boolean, error: *} | {success: boolean, data: [*]}>}
- * {success: false, error: any} or {success: true, data: [users]}
- */
-exports.getAllUsers = async () => {
-	try {
-		const users = await userRepository.getAllUsers();
+const { lessonRepository, courseRepository } = require('../repository/repository.index');
+const courses = require('../../assets/jsons/course.json');
+const {CONSTS} = require('../constants/consts');
 
-		return { success: true, data: users };
+
+const getRandomCourse = async () => {
+	const lessonCount = Math.floor(Math.random() * CONSTS.maxLessonCount) + CONSTS.minLessonCount;
+     
+	let lessons = await lessonRepository.getRandomLessons(lessonCount);
+	let lessonContent = [];
+	lessons.map(lesson => {
+		lessonContent.push({
+			"lessonId": lesson._id.toString(),
+			"lessonBody": lesson.body
+		})
+	})
+
+	return lessonContent;
+
+}
+
+
+exports.courseBulkOperation = async () => {
+
+	try {
+		let bulkCourseArray = [];
+		for (let i = 0; i < courses.length; i++) {
+			const courseContents = await getRandomCourse()
+
+			bulkCourseArray.push({
+				insertOne: {
+					document: {
+						"isPublished": true,
+						"title": courses[i].title,
+						"url": courses[i].url,
+						"body": courses[i].body,
+						"content": courseContents
+					},
+				}
+			});
+
+		}
+		return await courseRepository.courseBulkOperation(bulkCourseArray);
+
+
 	} catch (error) {
-		throw { success: false, error: any };
+		throw { success: false, error: error };
 	}
 };
- 
