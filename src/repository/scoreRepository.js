@@ -54,7 +54,7 @@ const Score = require('../model/score').Score;
  */
   exports.removeAllScore = () => {
     return new Promise((resolve, reject) => {
-        Score.deleteMany()
+        Score.remove()
             .then(result => {
                 resolve(result);
             })

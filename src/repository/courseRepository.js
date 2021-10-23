@@ -57,7 +57,7 @@ exports.courseBulkOperation = (bulkArray) => {
 */
 exports.removeAllCourse = () => {
     return new Promise((resolve, reject) => {
-        Course.deleteMany()
+        Course.remove()
             .then(result => {
                 resolve(result);
             })

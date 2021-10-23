@@ -24,7 +24,7 @@ exports.lessonBulkOperation = (bulkArray) => {
 */
 exports.removeAllLesson = () => {
     return new Promise((resolve, reject) => {
-        Lesson.deleteMany()
+        Lesson.remove()
             .then(result => {
                 resolve(result);
             })

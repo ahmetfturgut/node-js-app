@@ -44,7 +44,7 @@ const User = require('../model/user').User;
  */
   exports.removeAllUser = () => {
     return new Promise((resolve, reject) => {
-        User.deleteMany()
+        User.remove()
             .then(result => {
                 resolve(result);
             })

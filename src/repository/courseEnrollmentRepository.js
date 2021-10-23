@@ -23,7 +23,7 @@ exports.curseEnrollmentBulkOperation = (bulkArray) => {
 */
 exports.removeAllCourseEnrollment = () => {
     return new Promise((resolve, reject) => {
-        CourseEnrollment.deleteMany()
+        CourseEnrollment.remove()
             .then(result => {
                 resolve(result);
             })
